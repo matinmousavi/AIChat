@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+@keyframes scale-up-down {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.7);
+  }
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background-color: #1a1a1a;
+  color: white;
+}
+
+
+.my-custom-animation {
+  animation: scale-up-down 1.2s ease-in-out infinite;
+}
