@@ -19,7 +19,7 @@ const GemChatPage = () => {
     },
   ]);
 
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = async (text: string) => {
     const newUserMessage: Message = {
       id: messages.length + 1,
       text: text,
@@ -27,15 +27,33 @@ const GemChatPage = () => {
     };
     setMessages((prevMessages) => [...prevMessages, newUserMessage]);
     setIsLoading(true);
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: text }),
+      });
+
+      const data = await response.json();
       const botResponse: Message = {
         id: Date.now(),
-        text: "این یک پاسخ شبیه‌سازی شده است...",
+        text: data.message,
         sender: "bot",
       };
       setMessages((prevMessages) => [...prevMessages, botResponse]);
+    } catch (error) {
+      console.error("خطا در ارتباط با API:", error);
+      const errorResponse: Message = {
+        id: Date.now(),
+        text: "متاسفانه مشکلی پیش اومد. لطفاً دوباره تلاش کن.",
+        sender: "bot",
+      };
+      setMessages((prevMessages) => [...prevMessages, errorResponse]);
+    } finally {
       setIsLoading(false);
-    }, 1500);
+    }
   };
 
   return (
