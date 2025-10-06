@@ -1,7 +1,11 @@
+// file: app/page.tsx
+
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MessageInput from "@/components/MessageInput";
+import Sidebar from "@/components/Sidebar";
+import MessageBubble from "@/components/MessageBubble";
 
 export type Message = {
   id: number;
@@ -9,97 +13,220 @@ export type Message = {
   sender: "user" | "bot";
 };
 
+export type ChatSession = {
+  id: string;
+  title: string;
+  messages: Message[];
+};
+
 const GemChatPage = () => {
+  const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
+  const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: 1,
-      text: "سلام رفیق! من یه دستیار هوشمندم.\n متین من رو ساخته تا بهت کمک کنم. 🚀",
-      sender: "bot",
-    },
-  ]);
+
+  const handleNewChat = () => {
+    const newChat: ChatSession = {
+      id: Date.now().toString(),
+      title: "New Chat",
+      messages: [
+        {
+          id: Date.now(),
+          text: "سلام رفیق! من یه دستیار هوشمندم.\nرفیقت، متین موسوی، من رو ساخته تا بهت کمک کنم. 🚀",
+          sender: "bot",
+        },
+      ],
+    };
+    setChatSessions((prev) => [newChat, ...prev]);
+    setActiveChatId(newChat.id);
+  };
+
+  useEffect(() => {
+    const savedChats = localStorage.getItem("gemchat-sessions");
+    if (savedChats) {
+      const chats: ChatSession[] = JSON.parse(savedChats);
+      if (chats.length > 0) {
+        setChatSessions(chats);
+        setActiveChatId(chats[0].id);
+      } else {
+        handleNewChat();
+      }
+    } else {
+      handleNewChat();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (chatSessions.length > 0) {
+      localStorage.setItem("gemchat-sessions", JSON.stringify(chatSessions));
+    } else {
+      localStorage.removeItem("gemchat-sessions");
+    }
+  }, [chatSessions]);
+
+  const activeChat = chatSessions.find((chat) => chat.id === activeChatId);
+
+  const handleSwitchChat = (id: string) => setActiveChatId(id);
+
+  const handleDeleteChat = (idToDelete: string) => {
+    const remainingChats = chatSessions.filter(
+      (chat) => chat.id !== idToDelete
+    );
+    setChatSessions(remainingChats);
+    if (activeChatId === idToDelete) {
+      if (remainingChats.length > 0) {
+        setActiveChatId(remainingChats[0].id);
+      } else {
+        setActiveChatId(null);
+        handleNewChat();
+      }
+    }
+  };
+
+  const handleUpdateMessage = (messageId: number, newText: string) => {
+    if (!activeChat) return;
+    const messageIndex = activeChat.messages.findIndex(
+      (msg) => msg.id === messageId
+    );
+    if (messageIndex === -1) return;
+
+    const historyToResend = activeChat.messages.slice(0, messageIndex);
+    const updatedUserMessage: Message = {
+      ...activeChat.messages[messageIndex],
+      text: newText,
+    };
+
+    const updatedMessages = [...historyToResend, updatedUserMessage];
+
+    setChatSessions((sessions) =>
+      sessions.map((session) =>
+        session.id === activeChatId
+          ? { ...session, messages: updatedMessages }
+          : session
+      )
+    );
+
+    sendMessage(updatedMessages);
+  };
 
   const handleSendMessage = async (text: string) => {
-    const newUserMessage: Message = {
-      id: messages.length + 1,
-      text: text,
-      sender: "user",
-    };
-    setMessages((prevMessages) => [...prevMessages, newUserMessage]);
+    if (!activeChat) return;
+
+    const newUserMessage: Message = { id: Date.now(), text, sender: "user" };
+    const updatedMessages = [...activeChat.messages, newUserMessage];
+
+    setChatSessions((sessions) =>
+      sessions.map((session) => {
+        if (session.id === activeChatId) {
+          const isFirstUserMessage =
+            session.messages.filter((m) => m.sender === "user").length === 0;
+          return {
+            ...session,
+            title: isFirstUserMessage ? text : session.title,
+            messages: updatedMessages,
+          };
+        }
+        return session;
+      })
+    );
+
+    await sendMessage(updatedMessages);
+  };
+
+  const sendMessage = async (history: Message[]) => {
     setIsLoading(true);
+
     try {
+      const apiHistory = history.map((msg) => ({
+        role: msg.sender === "bot" ? "assistant" : "user", // OpenRouter uses 'assistant' for bot
+        content: msg.text,
+      }));
+
       const response = await fetch("/api/chat", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ message: text }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: apiHistory }),
       });
 
+      if (!response.ok) throw new Error("Network response was not ok");
+
       const data = await response.json();
-      const botResponse: Message = {
+      const botMessage: Message = {
         id: Date.now(),
         text: data.message,
         sender: "bot",
       };
-      setMessages((prevMessages) => [...prevMessages, botResponse]);
+
+      setChatSessions((currentSessions) =>
+        currentSessions.map((session) => {
+          if (session.id === activeChatId) {
+            return { ...session, messages: [...session.messages, botMessage] };
+          }
+          return session;
+        })
+      );
     } catch (error) {
-      console.error("خطا در ارتباط با API:", error);
-      const errorResponse: Message = {
+      console.error("Error fetching from API:", error);
+      const errorMessage: Message = {
         id: Date.now(),
-        text: "متاسفانه مشکلی پیش اومد. لطفاً دوباره تلاش کن.",
+        text: "متاسفانه مشکلی پیش اومد.",
         sender: "bot",
       };
-      setMessages((prevMessages) => [...prevMessages, errorResponse]);
+      setChatSessions((sessions) =>
+        sessions.map((session) =>
+          session.id === activeChatId
+            ? { ...session, messages: [...session.messages, errorMessage] }
+            : session
+        )
+      );
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gray-800">
-      <div className="flex-grow p-4 overflow-y-auto">
-        <div className="space-y-4">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`flex ${
-                msg.sender === "user" ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div
-                dir="auto"
-                className={`max-w-xs md:max-w-md text-right whitespace-pre-wrap p-3 rounded-2xl ${
-                  msg.sender === "user"
-                    ? "bg-blue-600 text-white"
-                    : "bg-gray-600 text-white"
-                }`}
-              >
-                {msg.text}
+    <div className="flex h-screen bg-gray-900 text-white">
+      <Sidebar
+        sessions={chatSessions}
+        activeChatId={activeChatId}
+        onNewChat={handleNewChat}
+        onSwitchChat={handleSwitchChat}
+        onDeleteChat={handleDeleteChat}
+      />
+      <div className="flex flex-col flex-grow bg-gray-700">
+        <div className="flex-grow p-4 overflow-y-auto">
+          <div className="space-y-4">
+            {activeChat?.messages.map((msg) => (
+              <div key={msg.id} className="group">
+                <MessageBubble
+                  msg={msg}
+                  onUpdateMessage={handleUpdateMessage}
+                />
               </div>
-            </div>
-          ))}
-          {isLoading && (
-            <div className="flex justify-start">
-              <div className="bg-gray-600 p-3 rounded-2xl">
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 bg-gray-400 rounded-full my-custom-animation"></span>
-                  <span
-                    className="w-2.5 h-2.5 bg-gray-400 rounded-full my-custom-animation"
-                    style={{ animationDelay: "0.2s" }}
-                  ></span>
-                  <span
-                    className="w-2.5 h-2.5 bg-gray-400 rounded-full my-custom-animation"
-                    style={{ animationDelay: "0.4s" }}
-                  ></span>
+            ))}
+            {isLoading && (
+              <div className="flex justify-start">
+                <div className="bg-gray-600 p-3 rounded-2xl">
+                  <div className="flex items-center space-x-2">
+                    <span className="w-2.5 h-2.5 bg-gray-400 rounded-full my-custom-animation"></span>
+                    <span
+                      className="w-2.5 h-2.5 bg-gray-400 rounded-full my-custom-animation"
+                      style={{ animationDelay: "0.2s" }}
+                    ></span>
+                    <span
+                      className="w-2.5 h-2.5 bg-gray-400 rounded-full my-custom-animation"
+                      style={{ animationDelay: "0.4s" }}
+                    ></span>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
+        <MessageInput
+          onSendMessage={handleSendMessage}
+          isLoading={!activeChat || isLoading}
+        />
       </div>
-
-      <MessageInput onSendMessage={handleSendMessage} isLoading={isLoading} />
     </div>
   );
 };

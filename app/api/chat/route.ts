@@ -1,27 +1,44 @@
 import { NextResponse } from "next/server";
 
-const cannedResponses = [
-  "این سوال خیلی جالبیه! بذار کمی فکر کنم...",
-  "درک می‌کنم. می‌تونی بیشتر در این مورد توضیح بدی؟",
-  "چه موضوع خوبی برای صحبت. از دیدگاه من...",
-  "برای پاسخ دقیق‌تر به اطلاعات بیشتری نیاز دارم.",
-  "این یک دیدگاه متداوله. از طرفی، می‌تونیم اینطور هم به قضیه نگاه کنیم که...",
-];
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 export const POST = async (request: Request) => {
   const body = await request.json();
-  const userMessage = body.message;
+  const messages = body.messages;
 
-  if (!userMessage) {
-    return NextResponse.json({ error: "پیام خالی است" }, { status: 400 });
+  if (!messages) {
+    return NextResponse.json({ error: "پیام‌ها خالی است" }, { status: 400 });
   }
 
-  await sleep(Math.random() * 2000 + 1000);
+  try {
+    const response = await fetch(
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "anthropic/claude-3-haiku",
+          messages: messages,
+        }),
+      }
+    );
 
-  const randomIndex = Math.floor(Math.random() * cannedResponses.length);
-  const aiMessage = cannedResponses[randomIndex];
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error("خطا از OpenRouter:", errorData);
+      throw new Error(`Error from OpenRouter: ${errorData.error.message}`);
+    }
 
-  return NextResponse.json({ message: aiMessage });
+    const data = await response.json();
+    const aiMessage = data.choices[0].message.content;
+
+    return NextResponse.json({ message: aiMessage });
+  } catch (error) {
+    console.error("خطا در ارتباط با OpenRouter API:", error);
+    return NextResponse.json(
+      { error: "مشکلی در ارتباط با هوش مصنوعی پیش آمد." },
+      { status: 500 }
+    );
+  }
 };

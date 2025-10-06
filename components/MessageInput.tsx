@@ -20,11 +20,15 @@ const MessageInput = ({ onSendMessage, isLoading }: MessageInputProps) => {
     <div className="p-4 bg-gray-900">
       <form onSubmit={handleSubmit} className="flex items-center space-x-4">
         <input
+          dir="rtl"
           type="text"
-          placeholder="پیام خود را بنویسید..."
-          className="flex-grow p-3 bg-gray-700 rounded-full focus:outline-none"
+          placeholder={
+            isLoading ? "در حال پردازش..." : "پیام خود را بنویسید..."
+          }
+          className="flex-grow p-3 bg-gray-700 rounded-full focus:outline-none disabled:opacity-50 text-right" // This class was added
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          disabled={isLoading}
         />
         <button
           type="submit"
