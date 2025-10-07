@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🤖 AIChat - اپلیکیشن چت هوشمند
 
-## Getting Started
+یک اپلیکیشن چت فول‌استک، مدرن و واکنش‌گرا که با استفاده از Next.js ساخته شده و به مدل‌های مختلف هوش مصنوعی از طریق OpenRouter متصل می‌شود. این پروژه با تمرکز بر تجربه کاربری روان و کدنویسی تمیز توسعه داده شده است.
 
-First, run the development server:
+## 🚀 دمو و تصاویر
+
+توصیه می‌کنم از صفحه اپلیکیشن خود یک ویدئوی کوتاه یا GIF ضبط کنید و اینجا قرار دهید. ابزارهایی مثل **ScreenToGif** (در ویندوز) یا **Giphy Capture** (در مک) برای این کار عالی هستن.
+
+![اسکرین‌شات پروژه AIChat](لینک_اسکرین‌شات_خود_را_اینجا_قرار_دهید.png)
+
+_(در اینجا یک یا چند اسکرین‌شات از ظاهر اپلیکیشن در دسکتاپ و موبایل قرار دهید)_
+
+---
+
+## ✨ ویژگی‌ها
+
+-   **ارتباط با مدل‌های مختلف هوش مصنوعی:** قابلیت اتصال و جابجایی آسان بین مدل‌های مختلف (مانند Claude 3 Haiku, Mistral, و...) از طریق OpenRouter.
+-   **رابط کاربری واکنش‌گرا (Responsive):** طراحی کاملاً بهینه شده برای نمایش صحیح در دسکتاپ، تبلت و موبایل.
+-   **تاریخچه چت:** تمام مکالمات در سایدبار ذخیره شده و قابل دسترس هستند.
+-   **ماندگاری اطلاعات:** با استفاده از `localStorage`، تاریخچه چت‌ها حتی پس از بستن و باز کردن مرورگر از بین نمی‌رود.
+-   **مدیریت چت:** قابلیت ساخت چت جدید و حذف چت‌های قبلی.
+-   **ویرایش پیام:** کاربران می‌توانند پیام‌های خود را ویرایش کرده و درخواست جدیدی بر اساس پیام اصلاح‌شده به هوش مصنوعی ارسال کنند.
+-   **حالت لودینگ:** نمایش انیمیشن "در حال پردازش" برای بهبود تجربه کاربری در زمان انتظار برای پاسخ.
+
+---
+
+## 🛠️ تکنولوژی‌های استفاده شده
+
+-   **فریمورک اصلی:** Next.js (App Router)
+-   **زبان برنامه‌نویسی:** TypeScript
+-   **استایل‌دهی:** Tailwind CSS
+-   **منطق سمت کلاینت:** React (Hooks: `useState`, `useEffect`)
+-   **بک‌اند:** Next.js API Routes (Serverless Functions)
+-   **ارتباط با هوش مصنوعی:** OpenRouter API
+-   **استقرار (Deployment):** Vercel
+
+---
+
+## 🏁 راه‌اندازی و اجرا در سیستم شخصی
+
+برای اجرای این پروژه به صورت محلی، مراحل زیر را دنبال کنید:
+
+**۱. کلون کردن ریپازیتوری:**
+
+```bash
+git clone [https://github.com/matinmousavi/AIChat.git]
+cd aichat
+```
+
+**۲. نصب وابستگی‌ها:**
+با استفاده از `npm` پکیج‌های مورد نیاز را نصب کنید:
+
+```bash
+npm install
+```
+
+**۳. تنظیم متغیرهای محیطی:**
+یک فایل به اسم `.env.local` در ریشه اصلی پروژه بسازید و کلید API خود را که از OpenRouter دریافت کرده‌اید، در آن قرار دهید.
+
+```env
+# .env.local
+
+OPENROUTER_API_KEY="sk-or-v1-..."
+```
+
+**۴. اجرای پروژه:**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+حالا می‌توانید پروژه را در آدرس `http://localhost:3000` مشاهده کنید.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📄 لایسنس
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+این پروژه تحت لایسنس MIT منتشر شده است.
