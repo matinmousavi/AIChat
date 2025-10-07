@@ -62,8 +62,8 @@
 **۱. کلون کردن ریپازیتوری:**
 
 ```bash
-git clone [https://github.com/matinmousavi/AIChat.git](https://github.com/matinmousavi/AIChat.git)
-cd aichat
+git clone https://github.com/matinmousavi/AIChat.git
+cd AIChat
 ```
 
 **۲. نصب وابستگی‌ها:**
