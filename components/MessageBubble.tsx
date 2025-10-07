@@ -28,7 +28,7 @@ const MessageBubble = ({ msg, onUpdateMessage }: MessageBubbleProps) => {
       {isUser && (
         <button
           onClick={() => setIsEditing(true)}
-          className="p-1 text-gray-400 opacity-0 transition-opacity hover:text-white group-hover:opacity-100"
+          className="p-1 transition-opacity text-gray-400 group-opacity-100"
           aria-label="Edit message"
         >
           <svg

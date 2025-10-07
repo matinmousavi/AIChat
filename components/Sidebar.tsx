@@ -67,7 +67,7 @@ const Sidebar = ({
                 </button>
                 <button
                   onClick={() => onDeleteChat(chat.id)}
-                  className="p-1 text-gray-400 opacity-0 transition-opacity hover:text-red-500 group-hover:opacity-100"
+                  className="p-1 transition-opacity text-gray-400 group-opacity-100"
                   aria-label="Delete chat"
                 >
                   <svg
