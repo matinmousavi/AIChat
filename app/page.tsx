@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import MessageInput from '@/components/MessageInput'
 import Sidebar from '@/components/Sidebar'
 import MessageBubble from '@/components/MessageBubble'
@@ -24,6 +24,13 @@ const AiChatPage = () => {
 	const [activeChatId, setActiveChatId] = useState<string | null>(null)
 	const [isLoading, setIsLoading] = useState(false)
 	const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+	const chatContainerRef = useRef<HTMLDivElement>(null)
+
+	useEffect(() => {
+		if (chatContainerRef.current) {
+			chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight
+		}
+	}, [chatSessions, activeChatId, isLoading])
 
 	const handleNewChat = () => {
 		const newChat: ChatSession = {
@@ -196,14 +203,14 @@ const AiChatPage = () => {
 						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-6 w-6'>
 							<path
 								fillRule='evenodd'
-								d='M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z'
+								d='M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1-.75-.75Z'
 								clipRule='evenodd'
 							/>
 						</svg>
 					</button>
 					<h1 className='ml-4 truncate font-semibold'>{activeChat?.title || 'AiChat'}</h1>
 				</header>
-				<div className='flex-grow overflow-y-auto p-4'>
+				<div ref={chatContainerRef} className='flex-grow overflow-y-auto p-4'>
 					<div className='space-y-4'>
 						{activeChat?.messages.map(msg => (
 							<div key={msg.id} className='group'>
