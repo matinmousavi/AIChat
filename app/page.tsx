@@ -1,5 +1,3 @@
-// file: app/page.tsx
-
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -41,6 +39,7 @@ const AiChatPage = () => {
 		}
 		setChatSessions(prev => [newChat, ...prev])
 		setActiveChatId(newChat.id)
+		setIsSidebarOpen(false)
 	}
 
 	useEffect(() => {
@@ -68,7 +67,10 @@ const AiChatPage = () => {
 
 	const activeChat = chatSessions.find(chat => chat.id === activeChatId)
 
-	const handleSwitchChat = (id: string) => setActiveChatId(id)
+	const handleSwitchChat = (id: string) => {
+		setActiveChatId(id)
+		setIsSidebarOpen(false)
+	}
 
 	const handleDeleteChat = (idToDelete: string) => {
 		const remainingChats = chatSessions.filter(chat => chat.id !== idToDelete)
@@ -83,71 +85,25 @@ const AiChatPage = () => {
 		}
 	}
 
-	const handleUpdateMessage = (messageId: number, newText: string) => {
-		if (!activeChat) return
-		const messageIndex = activeChat.messages.findIndex(msg => msg.id === messageId)
-		if (messageIndex === -1) return
-
-		const historyToResend = activeChat.messages.slice(0, messageIndex)
-		const updatedUserMessage: Message = {
-			...activeChat.messages[messageIndex],
-			text: newText,
-		}
-
-		const updatedMessages = [...historyToResend, updatedUserMessage]
-
-		setChatSessions(sessions => sessions.map(session => (session.id === activeChatId ? { ...session, messages: updatedMessages } : session)))
-
-		sendMessage(updatedMessages)
-	}
-
-	const handleSendMessage = async (text: string) => {
-		if (!activeChat) return
-
-		const newUserMessage: Message = { id: Date.now(), text, sender: 'user' }
-		const updatedMessages = [...activeChat.messages, newUserMessage]
-
-		setChatSessions(sessions =>
-			sessions.map(session => {
-				if (session.id === activeChatId) {
-					const isFirstUserMessage = session.messages.filter(m => m.sender === 'user').length === 0
-					return {
-						...session,
-						title: isFirstUserMessage ? text : session.title,
-						messages: updatedMessages,
-					}
-				}
-				return session
-			})
-		)
-
-		await sendMessage(updatedMessages)
-	}
-
 	const sendMessage = async (history: Message[]) => {
 		setIsLoading(true)
-
 		try {
 			const apiHistory = history.map(msg => ({
-				role: msg.sender === 'bot' ? 'assistant' : 'user', // OpenRouter uses 'assistant' for bot
+				role: msg.sender === 'bot' ? 'assistant' : 'user',
 				content: msg.text,
 			}))
-
 			const response = await fetch('/api/chat', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ messages: apiHistory }),
 			})
-
 			if (!response.ok) throw new Error('Network response was not ok')
-
 			const data = await response.json()
 			const botMessage: Message = {
 				id: Date.now(),
 				text: data.message,
 				sender: 'bot',
 			}
-
 			setChatSessions(currentSessions =>
 				currentSessions.map(session => {
 					if (session.id === activeChatId) {
@@ -171,8 +127,60 @@ const AiChatPage = () => {
 		}
 	}
 
+	const handleUpdateMessage = (messageId: number, newText: string) => {
+		if (!activeChat) return
+		const messageIndex = activeChat.messages.findIndex(msg => msg.id === messageId)
+		if (messageIndex === -1) return
+		const historyToResend = activeChat.messages.slice(0, messageIndex)
+		const updatedUserMessage: Message = {
+			...activeChat.messages[messageIndex],
+			text: newText,
+		}
+		const updatedMessages = [...historyToResend, updatedUserMessage]
+		setChatSessions(sessions => sessions.map(session => (session.id === activeChatId ? { ...session, messages: updatedMessages } : session)))
+		sendMessage(updatedMessages)
+	}
+
+	const generateTitleForChat = async (chatId: string, messageText: string) => {
+		try {
+			const response = await fetch('/api/generate-title', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ message: messageText }),
+			})
+			if (response.ok) {
+				const data = await response.json()
+				setChatSessions(sessions => sessions.map(session => (session.id === chatId ? { ...session, title: data.title } : session)))
+			}
+		} catch (error) {
+			console.error('Failed to generate title:', error)
+		}
+	}
+
+	const handleSendMessage = async (text: string) => {
+		if (!activeChat) return
+		const isFirstUserMessage = activeChat.messages.filter(m => m.sender === 'user').length === 0
+		const newUserMessage: Message = { id: Date.now(), text, sender: 'user' }
+		const updatedMessages = [...activeChat.messages, newUserMessage]
+		setChatSessions(sessions =>
+			sessions.map(session =>
+				session.id === activeChatId
+					? {
+							...session,
+							title: isFirstUserMessage ? text.substring(0, 25) + (text.length > 25 ? '...' : '') : session.title,
+							messages: updatedMessages,
+					  }
+					: session
+			)
+		)
+		await sendMessage(updatedMessages)
+		if (isFirstUserMessage && activeChatId) {
+			generateTitleForChat(activeChatId, text)
+		}
+	}
+
 	return (
-		<div className='flex h-dvh bg-gray-900 text-white' style={{ height: windowHeight ? `${windowHeight}px` : '100vh' }}>
+		<div className='flex bg-gray-900 text-white' style={{ height: windowHeight ? `${windowHeight}px` : '100dvh' }}>
 			<Sidebar
 				sessions={chatSessions}
 				activeChatId={activeChatId}
@@ -182,8 +190,8 @@ const AiChatPage = () => {
 				onClose={() => setIsSidebarOpen(false)}
 				isOpen={isSidebarOpen}
 			/>
-			<div className='flex flex-col flex-grow bg-gray-700'>
-				<header className='flex h-14 items-center border-b border-gray-600 p-4 md:hidden'>
+			<div className='flex flex-grow flex-col bg-gray-700'>
+				<header className='flex h-14 shrink-0 items-center border-b border-gray-600 p-4 md:hidden'>
 					<button onClick={() => setIsSidebarOpen(true)}>
 						<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='h-6 w-6'>
 							<path
@@ -193,9 +201,9 @@ const AiChatPage = () => {
 							/>
 						</svg>
 					</button>
-					<h1 className='ml-4 font-semibold'>AiChat</h1>
+					<h1 className='ml-4 truncate font-semibold'>{activeChat?.title || 'AiChat'}</h1>
 				</header>
-				<div className='flex-grow p-4 overflow-y-auto'>
+				<div className='flex-grow overflow-y-auto p-4'>
 					<div className='space-y-4'>
 						{activeChat?.messages.map(msg => (
 							<div key={msg.id} className='group'>
