@@ -23,6 +23,7 @@ const GemChatPage = () => {
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleNewChat = () => {
     const newChat: ChatSession = {
@@ -191,8 +192,27 @@ const GemChatPage = () => {
         onNewChat={handleNewChat}
         onSwitchChat={handleSwitchChat}
         onDeleteChat={handleDeleteChat}
+        onClose={() => setIsSidebarOpen(false)}
+        isOpen={isSidebarOpen}
       />
       <div className="flex flex-col flex-grow bg-gray-700">
+        <header className="flex h-14 items-center border-b border-gray-600 p-4 md:hidden">
+          <button onClick={() => setIsSidebarOpen(true)}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="h-6 w-6"
+            >
+              <path
+                fillRule="evenodd"
+                d="M3 6.75A.75.75 0 0 1 3.75 6h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 6.75ZM3 12a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75A.75.75 0 0 1 3 12Zm0 5.25a.75.75 0 0 1 .75-.75h16.5a.75.75 0 0 1 0 1.5H3.75a.75.75 0 0 1-.75-.75Z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </button>
+          <h1 className="ml-4 font-semibold">GemChat</h1>
+        </header>
         <div className="flex-grow p-4 overflow-y-auto">
           <div className="space-y-4">
             {activeChat?.messages.map((msg) => (
