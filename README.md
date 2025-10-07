@@ -51,7 +51,7 @@
 | **منطق کلاینت**  | React 19, React Hooks                     |
 | **بک‌اند**       | Next.js API Routes (Serverless Functions) |
 | **ارتباط با AI** | OpenRouter API                            |
-| **استقرار**      | Vercel                                    |
+| **استقرار**      | Netlify                                    |
 
 ---
 
