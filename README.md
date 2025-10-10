@@ -1,18 +1,39 @@
 
-# 🤖 دستیار هوشمند شخصی شما - AIChat 
+## 🤖 دستیار هوشمند شخصی شما - AIChat 
+
 <p align="center">
-  [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/matinmousavi/AIChat/blob/main/LICENSE)
-  [![Tech Stack](https://img.shields.io/badge/Next.js%2015%20%7C%20React%2019%20%7C%20TypeScript-000000.svg?style=flat&logo=Next.js&logoColor=white&labelColor=222222)](https://nextjs.org/)
-  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-  [![API Service](https://imgshields.io/badge/OpenRouter%20API-32a852?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMjMuNzU3IDkuNTQgMTIgMTIgMTIgMjJDMjIuNDY0IDE3LjggMTIgMiA1LjU4OCA2Ljk3Nkw0Ljc0NiA1LjE5NkMxMC41NTkgMC40NTMgMTkgMCAxMiAyWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==&labelColor=32a852&color=222222)](https://openrouter.ai/)
-  [![Hits](https://hits.seeyounexttime.com/badgen/github/hits/matinmousavi/AIChat?color=black&label=VIEWS&icon=github)](https://hits.seeyounexttime.com/)
-  </p>
+  <a href="https://nextjs.org/">
+    <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white" alt="Next.js">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://www.typescriptlang.org/">
+    <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://www.netlify.com/">
+    <img src="https://img.shields.io/badge/Netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white" alt="Netlify">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/matinmousavi">
+    <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/matinmousavi/AIChat/blob/main/LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="License">
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://openrouter.ai/">
+    <img src="https://img.shields.io/badge/AI%20API-OpenRouter-32a852?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMjMuNzU3IDkuNTQgMTIgMTIgMTIgMjJDMjIuNDY0IDE3LjggMTIgMiA1LjU4OCA2Ljk3Nkw0LjU0NiA1LjE5NkMxMC4zNTkgMC40NTMgMTkgMCAxMiAyWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==&labelColor=222222&color=32a852" alt="OpenRouter">
+  </a>
+</p>
+
 
 > **A modern full-stack AI Chat app built with Next.js 15 & React 19.** > Talk to multiple AI models via **OpenRouter**, manage chat history, and enjoy a sleek responsive UI. 
 > 🌐 [Live Demo](https://aichat.matin-mousavi.ir) • ⭐ [Star this repo](https://github.com/matinmousavi/AIChat/stargazers)
 
 
 ---
+
 
 
 ## درباره پروژه
@@ -59,16 +80,15 @@
 
 ## 🛠️ پشته فناوری (Tech Stack)
 
-| دسته            | تکنولوژی                                        |
-| :-------------- | :---------------------------------------------- |
-| **فریمورک اصلی** | Next.js 15 (App Router)                         |
-| **زبان** | TypeScript                                      |
-| **استایل‌دهی** | Tailwind CSS                                    |
-| **منطق کلاینت** | React 19, React Hooks                           |
-| **بک‌اند** | Next.js API Routes (Serverless Functions)       |
-| **ارتباط با AI** | OpenRouter API                                  |
-| **استقرار** | Netlify                                          |
-
+> | دسته | تکنولوژی |
+> | :--- | :--- |
+> | **فریمورک اصلی** | Next.js 15 (App Router) |
+> | **زبان** | TypeScript |
+> | **استایل‌دهی** | Tailwind CSS |
+> | **منطق کلاینت** | React 19, React Hooks |
+> | **بک‌اند** | Next.js API Routes (Serverless Functions) |
+> | **ارتباط با AI** | OpenRouter API |
+> | **استقرار** | Netlify |
 
 ---
 
