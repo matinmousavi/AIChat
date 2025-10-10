@@ -16,7 +16,7 @@
 ## 📸 نگاهی به پروژه
 
 <p align="center">
-  <img alt="نمای دسکتاپ AIChat" src="./public/screenshot-desktop.png" width="60%">
+  <img alt="نمای دسکتاپ AIChat" src="./public/aichat-desktop.png" width="60%">
 </p>
 <p align="center">
   <em>نمای اصلی اپلیکیشن در دسکتاپ</em>
@@ -25,8 +25,8 @@
 <br/>
 
 <p align="center">
-  <img alt="نمای موبایل AIChat" src="./public/screenshot-mobile.png" width="30%" hspace="20">
-  <img alt="ویژگی ویرایش پیام" src="./public/screenshot-feature.png" width="30%" hspace="20">
+  <img alt="نمای موبایل AIChat" src="./public/aichat-mobile.png" width="30%" hspace="20">
+  <img alt="نمای موبایل AIChat" src="./public/aichat.png" width="30%" hspace="20">
 </p>
 <p align="center">
   <em>طراحی کاملاً واکنش‌گرا برای موبایل و قابلیت‌های پیشرفته مانند ویرایش پیام</em>
