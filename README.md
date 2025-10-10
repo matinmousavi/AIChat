@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="./public/aichat-desktop.png" width="80" alt="AIChat Logo"/>
-</p>
-
 # 🤖 AIChat - دستیار هوشمند شخصی شما  
 > **A modern full-stack AI Chat app built with Next.js 15 & React 19.**  
 > Talk to multiple AI models via **OpenRouter**, manage chat history, and enjoy a sleek responsive UI.  
