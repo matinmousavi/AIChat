@@ -1,5 +1,5 @@
 
-# 🤖 AIChat - دستیار هوشمند شخصی شما  
+# 🤖 دستیار هوشمند شخصی شما - AIChat 
 > **A modern full-stack AI Chat app built with Next.js 15 & React 19.**  
 > Talk to multiple AI models via **OpenRouter**, manage chat history, and enjoy a sleek responsive UI.  
 > 🌐 [Live Demo](https://aichat.matin-mousavi.ir) • ⭐ [Star this repo](https://github.com/matinmousavi/AIChat/stargazers)
