@@ -25,8 +25,8 @@
 <br/>
 
 <p align="center">
-  <img alt="نمای موبایل AIChat" src="./public/aichat-mobile.png" width="30%" hspace="20">
-  <img alt="نمای موبایل AIChat" src="./public/aichat.png" width="30%" hspace="20">
+  <img alt="نمای موبایل AIChat" src="./public/aichat-mobile.jpg" width="30%" hspace="20">
+  <img alt="نمای موبایل AIChat" src="./public/aichat-mobile-2.jpg" width="30%" hspace="20">
 </p>
 <p align="center">
   <em>طراحی کاملاً واکنش‌گرا برای موبایل و قابلیت‌های پیشرفته مانند ویرایش پیام</em>
