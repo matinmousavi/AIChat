@@ -1,8 +1,18 @@
 
 # 🤖 دستیار هوشمند شخصی شما - AIChat 
-> **A modern full-stack AI Chat app built with Next.js 15 & React 19.**  
-> Talk to multiple AI models via **OpenRouter**, manage chat history, and enjoy a sleek responsive UI.  
+<p align="center">
+  [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/matinmousavi/AIChat/blob/main/LICENSE)
+  [![Tech Stack](https://img.shields.io/badge/Next.js%2015%20%7C%20React%2019%20%7C%20TypeScript-000000.svg?style=flat&logo=Next.js&logoColor=white&labelColor=222222)](https://nextjs.org/)
+  [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+  [![API Service](https://imgshields.io/badge/OpenRouter%20API-32a852?style=flat&logo=data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMjMuNzU3IDkuNTQgMTIgMTIgMTIgMjJDMjIuNDY0IDE3LjggMTIgMiA1LjU4OCA2Ljk3Nkw0Ljc0NiA1LjE5NkMxMC41NTkgMC40NTMgMTkgMCAxMiAyWiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg==&labelColor=32a852&color=222222)](https://openrouter.ai/)
+  [![Hits](https://hits.seeyounexttime.com/badgen/github/hits/matinmousavi/AIChat?color=black&label=VIEWS&icon=github)](https://hits.seeyounexttime.com/)
+  </p>
+
+> **A modern full-stack AI Chat app built with Next.js 15 & React 19.** > Talk to multiple AI models via **OpenRouter**, manage chat history, and enjoy a sleek responsive UI. 
 > 🌐 [Live Demo](https://aichat.matin-mousavi.ir) • ⭐ [Star this repo](https://github.com/matinmousavi/AIChat/stargazers)
+
+
+---
 
 
 ## درباره پروژه
@@ -45,21 +55,24 @@
 * **اصول معماری SOLID:** پروژه با رعایت اصول کدنویسی تمیز و **SOLID** طراحی شده تا کدی قابل فهم، قابل توسعه و قابل نگهداری داشته باشد.
 
 
+---
+
 ## 🛠️ پشته فناوری (Tech Stack)
 
-| دسته            | تکنولوژی                                        |
+| دسته            | تکنولوژی                                        |
 | :-------------- | :---------------------------------------------- |
-| **فریمورک اصلی** | Next.js 15 (App Router)                         |
-| **زبان** | TypeScript                                      |
-| **استایل‌دهی** | Tailwind CSS                                    |
-| **منطق کلاینت** | React 19, React Hooks                           |
-| **بک‌اند** | Next.js API Routes (Serverless Functions)       |
-| **ارتباط با AI** | OpenRouter API                                  |
-| **استقرار** | Netlify                                          |
+| **فریمورک اصلی** | Next.js 15 (App Router)                         |
+| **زبان** | TypeScript                                      |
+| **استایل‌دهی** | Tailwind CSS                                    |
+| **منطق کلاینت** | React 19, React Hooks                           |
+| **بک‌اند** | Next.js API Routes (Serverless Functions)       |
+| **ارتباط با AI** | OpenRouter API                                  |
+| **استقرار** | Netlify                                          |
 
+
+---
 
 ## 🚀 راه‌اندازی و اجرا در سیستم شخصی
-
 برای اجرای این پروژه به صورت محلی، مراحل زیر را دنبال کنید:
 **۱. کلون کردن ریپازیتوری:**
 ```bash
@@ -85,7 +98,9 @@ npm run dev
 ```
 حالا می‌توانید پروژه را در آدرس `http://localhost:3000` مشاهده کنید.
 
-##🌟 حمایت از پروژه
+---
+
+## 🌟 حمایت از پروژه
 
 اگر از این پروژه خوشتان آمده ❤️
 لطفاً با دادن ⭐ در گیت‌هاب از آن حمایت کنید:
@@ -95,6 +110,7 @@ npm run dev
 همچنین می‌توانید پروژه را Fork کرده و ایده‌های خود را اضافه کنید.
 نظرات و پیشنهادات شما در بخش Issues بسیار ارزشمند هستند🙏
 
+---
 
 ## 📄 لایسنس
 
@@ -102,7 +118,7 @@ npm run dev
 استفاده آزاد با حفظ حقوق سازنده بلامانع است.
 
 
-##👨‍💻 درباره توسعه‌دهنده
+## 👨‍💻 درباره توسعه‌دهنده
 
 ساخته‌شده توسط Matin Mousavi
 
