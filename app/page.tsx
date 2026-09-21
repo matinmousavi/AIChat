@@ -94,6 +94,17 @@ const AiChatPage = () => {
 
 	const sendMessage = async (history: Message[]) => {
 		setIsLoading(true)
+		const botMessageId = Date.now() + 1
+
+		setChatSessions(currentSessions =>
+			currentSessions.map(session => {
+				if (session.id === activeChatId) {
+					return { ...session, messages: [...session.messages, { id: botMessageId, text: '', sender: 'bot' as const }] }
+				}
+				return session
+			})
+		)
+
 		try {
 			const apiHistory = history.map(msg => ({
 				role: msg.sender === 'bot' ? 'assistant' : 'user',
@@ -104,30 +115,60 @@ const AiChatPage = () => {
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({ messages: apiHistory }),
 			})
-			if (!response.ok) throw new Error('Network response was not ok')
-			const data = await response.json()
-			const botMessage: Message = {
-				id: Date.now(),
-				text: data.message,
-				sender: 'bot',
-			}
-			setChatSessions(currentSessions =>
-				currentSessions.map(session => {
-					if (session.id === activeChatId) {
-						return { ...session, messages: [...session.messages, botMessage] }
+			if (!response.ok || !response.body) throw new Error('Network response was not ok')
+
+			const reader = response.body.getReader()
+			const decoder = new TextDecoder()
+			let buffer = ''
+			let accumulatedText = ''
+
+			while (true) {
+				const { done, value } = await reader.read()
+				if (done) break
+				buffer += decoder.decode(value, { stream: true })
+				const lines = buffer.split('\n')
+				buffer = lines.pop() || ''
+
+				for (const line of lines) {
+					const trimmed = line.trim()
+					if (!trimmed.startsWith('data:')) continue
+					const dataStr = trimmed.slice(5).trim()
+					if (dataStr === '[DONE]') continue
+
+					try {
+						const parsed = JSON.parse(dataStr)
+						const delta = parsed.choices?.[0]?.delta?.content
+						if (delta) {
+							accumulatedText += delta
+							const textSoFar = accumulatedText
+							setChatSessions(currentSessions =>
+								currentSessions.map(session => {
+									if (session.id === activeChatId) {
+										return {
+											...session,
+											messages: session.messages.map(m => (m.id === botMessageId ? { ...m, text: textSoFar } : m)),
+										}
+									}
+									return session
+								})
+							)
+						}
+					} catch {
+						// چانک ناقص بود، رد می‌شیم
 					}
-					return session
-				})
-			)
+				}
+			}
 		} catch (error) {
 			console.error('Error fetching from API:', error)
-			const errorMessage: Message = {
-				id: Date.now(),
-				text: 'متاسفانه مشکلی پیش اومد.',
-				sender: 'bot',
-			}
 			setChatSessions(sessions =>
-				sessions.map(session => (session.id === activeChatId ? { ...session, messages: [...session.messages, errorMessage] } : session))
+				sessions.map(session =>
+					session.id === activeChatId
+						? {
+								...session,
+								messages: session.messages.map(m => (m.id === botMessageId ? { ...m, text: 'متاسفانه مشکلی پیش اومد.' } : m)),
+						  }
+						: session
+				)
 			)
 		} finally {
 			setIsLoading(false)
@@ -186,6 +227,9 @@ const AiChatPage = () => {
 		}
 	}
 
+	const lastMessage = activeChat?.messages[activeChat.messages.length - 1]
+	const showTypingDots = isLoading && lastMessage?.sender === 'bot' && lastMessage.text === ''
+
 	return (
 		<div className='flex bg-gray-900 text-white' style={{ height: windowHeight ? `${windowHeight}px` : '100dvh' }}>
 			<Sidebar
@@ -217,7 +261,7 @@ const AiChatPage = () => {
 								<MessageBubble msg={msg} onUpdateMessage={handleUpdateMessage} />
 							</div>
 						))}
-						{isLoading && (
+						{showTypingDots && (
 							<div className='flex justify-start'>
 								<div className='bg-gray-600 p-3 rounded-2xl'>
 									<div className='flex items-center space-x-2'>

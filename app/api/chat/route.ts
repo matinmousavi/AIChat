@@ -1,26 +1,29 @@
-import { NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 
-export const POST = async (request: Request) => {
+export const POST = async (request: NextRequest) => {
   const body = await request.json();
   const messages = body.messages;
 
   if (!messages) {
-    return NextResponse.json({ error: "پیام‌ها خالی است" }, { status: 400 });
+    return new Response(JSON.stringify({ error: "پیام‌ها خالی است" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
-    return NextResponse.json(
-      {
+    return new Response(
+      JSON.stringify({
         error:
           "کلید OpenRouter تنظیم نشده است. فایل .env.local بسازید و OPENROUTER_API_KEY را اضافه کنید.",
-      },
-      { status: 500 },
+      }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }
 
   try {
-    const response = await fetch(
+    const upstream = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
         method: "POST",
@@ -32,29 +35,37 @@ export const POST = async (request: Request) => {
           model: "anthropic/claude-3-haiku",
           messages: messages,
           max_tokens: 1000,
+          stream: true,
         }),
       },
     );
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
+    if (!upstream.ok || !upstream.body) {
+      const errorData = await upstream.json().catch(() => ({}));
       console.error("خطا از OpenRouter:", errorData);
       const message =
         typeof errorData?.error?.message === "string"
           ? errorData.error.message
           : "درخواست به OpenRouter ناموفق بود.";
-      throw new Error(message);
+      return new Response(JSON.stringify({ error: message }), {
+        status: 500,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    const data = await response.json();
-    const aiMessage = data.choices[0].message.content;
-
-    return NextResponse.json({ message: aiMessage });
+    return new Response(upstream.body, {
+      status: 200,
+      headers: {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      },
+    });
   } catch (error) {
     console.error("خطا در ارتباط با OpenRouter API:", error);
-    return NextResponse.json(
-      { error: "مشکلی در ارتباط با هوش مصنوعی پیش آمد." },
-      { status: 500 },
+    return new Response(
+      JSON.stringify({ error: "مشکلی در ارتباط با هوش مصنوعی پیش آمد." }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
     );
   }
 };
