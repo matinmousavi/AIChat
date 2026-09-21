@@ -58,8 +58,34 @@ const MessageBubble = ({ msg, onUpdateMessage }: MessageBubbleProps) => {
 							</button>
 						</div>
 					</div>
-				) : (
+				) : isUser ? (
 					<p className='whitespace-pre-wrap'>{msg.text}</p>
+				) : (
+					<div className='prose prose-invert prose-sm max-w-none'>
+						<ReactMarkdown
+							remarkPlugins={[remarkGfm]}
+							components={{
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+								code({ children, className }: any) {
+									const match = /language-(\w+)/.exec(className || '')
+									return match ? (
+										<SyntaxHighlighter
+											PreTag='div'
+											language={match[1]}
+											style={oneDark}
+											customStyle={{ borderRadius: '0.5rem', fontSize: '0.85rem' }}
+										>
+											{String(children).replace(/\n$/, '')}
+										</SyntaxHighlighter>
+									) : (
+										<code className='rounded bg-black/30 px-1 py-0.5'>{children}</code>
+									)
+								},
+							}}
+						>
+							{msg.text}
+						</ReactMarkdown>
+					</div>
 				)}
 			</div>
 		</div>
